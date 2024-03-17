@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Blogging Platform</title>
+</head>
+<body>
+  <h1>Blog Posts</h1>
+  <ul id="postsList"></ul>
+  
+  <h2>Todo List</h2>
+  <ul id="todoList"></ul>
+
+  <script>
+    // Fetch and Display Posts
+    fetch('https://jsonplaceholder.typicode.com/posts')
+    .then(response => response.json())
+    .then(posts => {
+      const postsList = document.getElementById('postsList');
+      posts.forEach(post => {
+        const li = document.createElement('li');
+        li.textContent = post.title;
+        postsList.appendChild(li);
+      });
+    })
+    .catch(error => {
+      console.error('Error fetching posts:', error);
+      alert('Failed to fetch posts. Please try again later.');
+    });
+
+    // Fetch and Display Todos
+    fetch('https://jsonplaceholder.typicode.com/todos')
+    .then(response => response.json())
+    .then(todos => {
+      const todoList = document.getElementById('todoList');
+      todos.forEach(todo => {
+        const li = document.createElement('li');
+        li.textContent = todo.title;
+        todoList.appendChild(li);
+      });
+    })
+    .catch(error => {
+      console.error('Error fetching todos:', error);
+      alert('Failed to fetch todos. Please try again later.');
+    });
+
+    // JavaScript Design Pattern
+    const todoModule = (function() {
+      // private variables and functions
+      let todos = [];
+
+      const getTodos = () => {
+        fetch('https://jsonplaceholder.typicode.com/todos')
+        .then(response => response.json())
+        .then(data => {
+          todos = data;
+          renderTodos();
+        })
+        .catch(error => {
+          console.error('Error fetching todos:', error);
+          alert('Failed to fetch todos. Please try again later.');
+        });
+      };
+
+      const renderTodos = () => {
+        const todoList = document.getElementById('todoList');
+        todoList.innerHTML = '';
+        todos.forEach(todo => {
+          const li = document.createElement('li');
+          li.textContent = todo.title;
+          todoList.appendChild(li);
+        });
+      };
+
+      return {
+        init: function() {
+          getTodos();
+        }
+      };
+    })();
+
+    todoModule.init();
+  </script>
+</body>
+</html>
